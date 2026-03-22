@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0zrrix3" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.43.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0">
+  <bpmn:process id="ticketProcess" name="Ticket System" isExecutable="true">
+    <bpmn:sequenceFlow id="Flow_05rwyeb" sourceRef="Task_TicketAnlage" targetRef="EndEvent_TicketDone" />
+    <bpmn:sequenceFlow id="Flow_12ja0jm" sourceRef="Task_PruefeKunde" targetRef="Gateway_03hyzo3" />
+    <bpmn:sequenceFlow id="Flow_194x8i4" sourceRef="StartEvent_TicketEingang" targetRef="Task_PruefeKunde" />
+    <bpmn:sequenceFlow id="Flow_1ptlvkv" sourceRef="Gateway_03hyzo3" targetRef="kundeUngueltig">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=customerValid = false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:exclusiveGateway id="Gateway_03hyzo3">
+      <bpmn:incoming>Flow_12ja0jm</bpmn:incoming>
+      <bpmn:outgoing>true_1</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1ptlvkv</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="kundeUngueltig" name="Kunde ungültig">
+      <bpmn:incoming>Flow_1ptlvkv</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="Task_PruefeKunde" name="PruefeKunde">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="checkCustomer" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_194x8i4</bpmn:incoming>
+      <bpmn:outgoing>Flow_12ja0jm</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_TicketAnlage" name="Ticket Anlage">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="createOrder" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>true_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_05rwyeb</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="EndEvent_TicketDone" name="Ticket Done">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_05rwyeb</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:startEvent id="StartEvent_TicketEingang" name="Ticket Eingang">
+      <bpmn:outgoing>Flow_194x8i4</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="true_1" name="true" sourceRef="Gateway_03hyzo3" targetRef="Task_TicketAnlage">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=customerValid = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ticketProcess">
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_TicketEingang">
+        <dc:Bounds x="182" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="165" y="145" width="72" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_09r1y6l_di" bpmnElement="Task_PruefeKunde">
+        <dc:Bounds x="270" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_124e9id_di" bpmnElement="Task_TicketAnlage">
+        <dc:Bounds x="620" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_03hyzo3_di" bpmnElement="Gateway_03hyzo3" isMarkerVisible="true">
+        <dc:Bounds x="425" y="95" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_06hq6fx_di" bpmnElement="kundeUngueltig">
+        <dc:Bounds x="432" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="413" y="255" width="74" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0av37ca_di" bpmnElement="EndEvent_TicketDone">
+        <dc:Bounds x="792" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="781" y="145" width="58" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_194x8i4_di" bpmnElement="Flow_194x8i4">
+        <di:waypoint x="218" y="120" />
+        <di:waypoint x="270" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12ja0jm_di" bpmnElement="Flow_12ja0jm">
+        <di:waypoint x="370" y="120" />
+        <di:waypoint x="425" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1scy9ck_di" bpmnElement="true_1">
+        <di:waypoint x="475" y="120" />
+        <di:waypoint x="620" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="538" y="102" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ptlvkv_di" bpmnElement="Flow_1ptlvkv">
+        <di:waypoint x="450" y="145" />
+        <di:waypoint x="450" y="212" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_05rwyeb_di" bpmnElement="Flow_05rwyeb">
+        <di:waypoint x="720" y="120" />
+        <di:waypoint x="792" y="120" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
