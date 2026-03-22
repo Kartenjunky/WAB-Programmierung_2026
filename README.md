@@ -1,5 +1,5 @@
-# WAB-Programmierung_2026_Leon_Graf
-Dieses Repository beinhaltet den verwendeten Code für den Custom JobWorker von Leon Graf.
+# WAB-Programmierung_2026
+Dieses Repository beinhaltet den verwendeten Code für den Custom JobWorker.
 
 MOCK-API: Pythondatei zur Erstellung der MOCK-API  
 Ticket_Worker: Java-Code zur Programmierung des Custom JobWorker  
